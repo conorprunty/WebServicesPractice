@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 
 @Path("/webservice")
 public class WebService {
@@ -33,6 +35,11 @@ public class WebService {
     int sum;
     int avg;
     int total;
+
+    int userSum;
+    int userAvg;
+    int userTotal;
+    int userCardinality;
 
     public void populateList() {
         Random ran = new Random();
@@ -85,7 +92,17 @@ public class WebService {
 
         String jsonString = new Gson().toJson(allDetails);
 
-        return Response.status(200).entity((jsonString)+"\n"+list.toString()).build();
+        return Response.status(200).entity((jsonString) + "\n" + list.toString()).build();
+    }
+
+    @POST
+    @Path("/post")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response postTestResponse(String data) {
+
+        String result = "Result:\n" + data;
+
+        return Response.status(200).entity(result).build();
     }
 
 }
