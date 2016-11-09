@@ -22,6 +22,7 @@ public class PostClient {
     public static void main(String[] args) {
 
         int sum = 0;
+        String out = "";
 
         try {
 
@@ -30,21 +31,23 @@ public class PostClient {
             WebResource webResource = client.resource("http://localhost:8080/api/webservice/post");
             ArrayList list = new ArrayList();
             Scanner scan = new Scanner(System.in);
-            System.out.println("Please enter 5 numbers, one after the other");
-            int userEntry1 = scan.nextInt();
-            int userEntry2 = scan.nextInt();
-            int userEntry3 = scan.nextInt();
-            int userEntry4 = scan.nextInt();
-            int userEntry5 = scan.nextInt();
-            list.add(userEntry1);
-            list.add(userEntry2);
-            list.add(userEntry3);
-            list.add(userEntry4);
-            list.add(userEntry5);
+            System.out.println("Please enter numbers. To stop, enter '0'.");
+            int userEntry;
+            while (scan.hasNextLine()) {
+                userEntry = scan.nextInt();
+                if (userEntry != 0) {
+                    list.add(userEntry);
+                } else {
+                    System.out.println("You have stopped the list");
+                    break;
+                }
+            }
 
-            System.out.println("Entries " + userEntry1 + " and " + userEntry2 + " "
-                    + "and " + userEntry3 + " and " + userEntry4 + " "
-                    + "and " + userEntry5 + " added");
+            for (Object userList : list) {
+                out += userList.toString() + ", ";
+            }
+
+            System.out.println("User entries are: " + out);
 
             int card = list.size();
 
@@ -57,10 +60,10 @@ public class PostClient {
             Collections.sort(list);
             int median = Integer.parseInt(list.get(card / 2).toString());
 
-            String input = "Cardinality: " + card + "\nSum: " + sum
-                    + "\nAverage: " + avg + "\nMedian: " + median + "\n";
+            System.out.println("\nCardinality: " + card + "\nSum: " + sum
+                    + "\nAverage: " + avg + "\nMedian: " + median + "\n");
 
-            input += new Gson().toJson(list);
+            String input = new Gson().toJson(list);
 
             ClientResponse response = webResource.type("application/json")
                     .post(ClientResponse.class, input);
